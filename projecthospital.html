@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sweety Hospital</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f2f6ff;
+        }
+
+        .header {
+            background-color: #1e88e5;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            font-size: 45px;
+            font-weight: bold;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .department {
+            background: white;
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .department h2 {
+            color: #1e88e5;
+        }
+
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            border: none;
+            background: #1e88e5;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1565c0;
+        }
+
+        .booking {
+            display: none;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        select, input {
+            padding: 8px;
+            margin: 10px;
+            width: 200px;
+        }
+
+        .success {
+            color: green;
+            font-weight: bold;
+        }
+
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">SWEETY HOSPITAL</div>
+
+<div class="container" id="doctorSection">
+
+    <div class="department">
+        <h2>General Medicine</h2>
+        <button onclick="openBooking('Dr. Arjun Kumar')">Dr. Arjun Kumar</button>
+        <button onclick="openBooking('Dr. Priya Sharma')">Dr. Priya Sharma</button>
+    </div>
+
+    <div class="department">
+        <h2>Cardiology</h2>
+        <button onclick="openBooking('Dr. Rahul Mehta')">Dr. Rahul Mehta</button>
+        <button onclick="openBooking('Dr. Sneha Reddy')">Dr. Sneha Reddy</button>
+    </div>
+
+    <div class="department">
+        <h2>Orthopedics</h2>
+        <button onclick="openBooking('Dr. Karthik Rao')">Dr. Karthik Rao</button>
+        <button onclick="openBooking('Dr. Anjali Verma')">Dr. Anjali Verma</button>
+    </div>
+
+</div>
+
+<div class="container booking" id="bookingSection">
+
+    <h2 id="doctorName"></h2>
+
+    <h3>Enter Patient Details</h3>
+    <input type="text" id="patientName" placeholder="Patient Name" required><br>
+    <input type="number" id="patientAge" placeholder="Age" required><br>
+
+    <h3>Select Date</h3>
+    <select id="date">
+        <option>20 Feb 2026</option>
+        <option>21 Feb 2026</option>
+        <option>22 Feb 2026</option>
+    </select>
+
+    <h3>Select Time</h3>
+    <select id="time">
+        <option>9:00 AM</option>
+        <option>11:00 AM</option>
+        <option>2:00 PM</option>
+        <option>4:00 PM</option>
+    </select>
+
+    <p>Consultation Fee: ₹200</p>
+
+    <button onclick="bookAppointment()">Pay & Book</button>
+    <button onclick="goBack()">Back</button>
+
+    <p id="result"></p>
+
+</div>
+
+<script>
+
+let bookings = {};  // stores bookings per doctor per date
+let currentDoctor = "";
+
+function openBooking(doctor) {
+    currentDoctor = doctor;
+    document.getElementById("doctorName").innerText = doctor;
+    document.getElementById("doctorSection").style.display = "none";
+    document.getElementById("bookingSection").style.display = "block";
+}
+
+function goBack() {
+    document.getElementById("bookingSection").style.display = "none";
+    document.getElementById("doctorSection").style.display = "block";
+    document.getElementById("result").innerText = "";
+}
+
+function bookAppointment() {
+    let name = document.getElementById("patientName").value;
+    let age = document.getElementById("patientAge").value;
+    let date = document.getElementById("date").value;
+
+    if (name === "" || age === "") {
+        document.getElementById("result").innerHTML =
+            "<span class='error'>Please enter patient details.</span>";
+        return;
+    }
+
+    let key = currentDoctor + "_" + date;
+
+    if (!bookings[key]) {
+        bookings[key] = 0;
+    }
+
+    if (bookings[key] >= 50) {
+        document.getElementById("result").innerHTML =
+            "<span class='error'>Sorry! 50 patients already booked for this day.</span>";
+        return;
+    }
+
+    bookings[key]++;
+
+    document.getElementById("result").innerHTML =
+        "<span class='success'>Payment Successful!<br>Booking Confirmed.<br>Your Token Number: "
+        + bookings[key] + "</span>";
+}
+
+</script>
+
+</body>
+</html>
